@@ -1,8 +1,15 @@
 ### 控件相关
 * 文本框超过固定宽度自动变小    'me.grantland:autofittextview:0.2.+'
+<br> https://github.com/grantland/android-autofittextview
+
+* 时间选择器、选项选择器   <space><space><space>'com.contrarywind:Android-PickerView:3.2.5'
+<br>  https://github.com/Bigkoo/Android-PickerView
+
+* 仿支付宝密码输入框     'com.jungly:gridPasswordView:0.3'
+<br>  https://github.com/Jungerr/GridPasswordView
 
 ### 权限相关
-* rx权限工具    'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+* Rx权限工具    'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
 
 * easy权限工具  'pub.devrel:easypermissions:0.2.0'
 
@@ -26,7 +33,7 @@
 
 
 ### 图片框架
-* Gson解析工具     'com.google.code.gson:gson:2.8.0'
+* glide图片请求框架     'com.github.bumptech.glide:glide:3.7.0'
 
 * picasso图片请求框架   'com.squareup.picasso:picasso:2.4.0'
 
@@ -34,8 +41,8 @@
 * 极光统计     'cn.jiguang.sdk:janalytics:1.2.1'
 
 * 极光推送:     
->* 'cn.jiguang.sdk:jpush:3.1.1' 
->* 'cn.jiguang.sdk:jcore:1.1.9'
+     >* 'cn.jiguang.sdk:jpush:3.1.1' 
+     >* 'cn.jiguang.sdk:jcore:1.1.9'
 
 * 解决65535的问题依赖       'com.android.support:multidex:1.0.3'
 
