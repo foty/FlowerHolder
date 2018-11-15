@@ -29,6 +29,9 @@
 * 多点触控放大缩小图片     'com.github.chrisbanes:PhotoView:2.0.0'
 <br>https://github.com/chrisbanes/PhotoView
 
+*  水平、垂直跑马灯     'com.sunfusheng:marqueeview:<latest-version>'
+<br>https://github.com/sunfusheng/MarqueeView
+
 ## 工具
 * Gson解析工具    'com.google.code.gson:gson:2.8.0'
 
