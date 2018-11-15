@@ -32,6 +32,12 @@
 *  水平、垂直跑马灯     'com.sunfusheng:marqueeview:<latest-version>'
 <br>https://github.com/sunfusheng/MarqueeView
 
+* 图片阴影效果   'com.sdsmdg.harjot:materialshadows:1.2.5'
+<br>http://www.jcodecraeer.com/plus/view.php?aid=8030
+
+* 折线图，表单  'com.github.lecho:hellocharts-android:v1.5.8'
+<br>https://github.com/qht1003077897/hellocharts-line
+
 ## 工具
 * Gson解析工具    'com.google.code.gson:gson:2.8.0'
 
@@ -81,5 +87,9 @@
      >* 'cn.jiguang.sdk:jpush:3.1.1' 
      >* 'cn.jiguang.sdk:jcore:1.1.9'
 
-* 解决65535的问题依赖       'com.android.support:multidex:1.0.3'
+* 解决65535的问题依赖      'com.android.support:multidex:1.0.3'
+
+* RxJava与RxAndroid
+     >*  'io.reactivex.rxjava2:rxjava:2.1.17'
+     >*  'io.reactivex.rxjava2:rxandroid:2.0.2'
 
