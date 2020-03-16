@@ -61,7 +61,7 @@
 <br> https://github.com/ryanhoo/PhotoCropper
 
 ## 权限相关
-* Rx权限工具    'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+* Rx2权限工具,rx权限有分rx1跟rx2之分    'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar' 
 
 * easy权限工具  'pub.devrel:easypermissions:0.2.0'
 
