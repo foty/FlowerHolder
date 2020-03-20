@@ -1,4 +1,9 @@
 ## 控件相关
+
+* 弹性布局google推出娉美RelativeLayout的布局框架  'com.google.android:flexbox:1.0.0'
+
+* banner轮播图片  'com.youth.banner:banner:1.4.10'
+
 * 文本框超过固定宽度自动变小    'me.grantland:autofittextview:0.2.+'
 <br> https://github.com/grantland/android-autofittextview
 
@@ -92,4 +97,5 @@
 * RxJava与RxAndroid
      >*  'io.reactivex.rxjava2:rxjava:2.1.17'
      >*  'io.reactivex.rxjava2:rxandroid:2.0.2'
-
+     
+* 
