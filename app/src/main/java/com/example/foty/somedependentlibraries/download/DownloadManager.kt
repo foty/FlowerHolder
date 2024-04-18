@@ -4,24 +4,21 @@ import com.example.foty.somedependentlibraries.download.DownloadEntity
 import com.example.foty.somedependentlibraries.download.IDownloadManager
 import com.example.foty.somedependentlibraries.download.IFileDownloadListener
 import com.liulishuo.filedownloader.BaseDownloadTask
+import com.liulishuo.filedownloader.FileDownloadListener
 import com.liulishuo.filedownloader.FileDownloader
 import com.liulishuo.filedownloader.model.FileDownloadStatus
 import com.liulishuo.filedownloader.notification.BaseNotificationItem
-import com.liulishuo.filedownloader.notification.FileDownloadNotificationHelper
-import com.liulishuo.filedownloader.notification.FileDownloadNotificationListener
 import com.liulishuo.filedownloader.util.FileDownloadUtils
-import com.videocreator.downloadimpl.FileNotificationItem
-import com.videocreator.downloadimpl.SaveFileFromSand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
 import java.io.File
-import java.nio.file.Files.exists
 import kotlin.coroutines.CoroutineContext
 
-
-class DownloadManager : IDownloadManager,
-    FileDownloadNotificationListener(FileDownloadNotificationHelper<FileNotificationItem>()),
+/**
+ * 下载管理器
+ */
+class DownloadManager : IDownloadManager, FileDownloadListener(),
     CoroutineScope {
 
     private val newThread by lazy { newSingleThreadContext("SaveFile") }
@@ -133,7 +130,6 @@ class DownloadManager : IDownloadManager,
     }
 
     override fun pending(task: BaseDownloadTask?, soFarBytes: Int, totalBytes: Int) {
-        super.pending(task, soFarBytes, totalBytes)
         task?.let {
             it.filename
             val length = if (totalBytes == 0) (it.tag as? DownloadEntity)?.fileLength?.toInt()
@@ -143,14 +139,12 @@ class DownloadManager : IDownloadManager,
     }
 
     override fun progress(task: BaseDownloadTask?, soFarBytes: Int, totalBytes: Int) {
-        super.progress(task, soFarBytes, totalBytes)
         task?.let {
             listenerMap[it.id]?.progress(soFarBytes, totalBytes, it.speed)
         }
     }
 
     override fun completed(task: BaseDownloadTask?) {
-        super.completed(task)
         task?.let {
             listenerMap[it.id]?.completed()
             listenerMap.remove(it.id)
@@ -159,7 +153,6 @@ class DownloadManager : IDownloadManager,
     }
 
     override fun paused(task: BaseDownloadTask?, soFarBytes: Int, totalBytes: Int) {
-        super.paused(task, soFarBytes, totalBytes)
         task?.let {
             listenerMap[it.id]?.paused(soFarBytes, totalBytes)
             listenerMap.remove(it.id)
@@ -169,7 +162,7 @@ class DownloadManager : IDownloadManager,
     }
 
     override fun error(task: BaseDownloadTask?, e: Throwable?) {
-        super.error(task, e)
+
         task?.let {
             listenerMap[it.id]?.error(e)
             listenerMap.remove(it.id)
@@ -178,21 +171,10 @@ class DownloadManager : IDownloadManager,
     }
 
     override fun warn(task: BaseDownloadTask?) {
-        super.warn(task)
         task?.let {
             listenerMap[it.id]?.error(null)
             listenerMap.remove(it.id)
             (it.tag as? DownloadEntity)?.run { downloadMap.remove(key) }
-        }
-    }
-
-    override fun create(task: BaseDownloadTask?): BaseNotificationItem? {
-        return task?.run {
-            FileNotificationItem(
-                id,
-                "FileDownload",
-                (tag as? DownloadEntity)?.fileName ?: tag.toString()
-            )
         }
     }
 
@@ -207,12 +189,12 @@ class DownloadManager : IDownloadManager,
         callback: (String) -> Unit
     ) {
         launch(coroutineContext) {
-            SaveFileFromSand.saveFileToDocument(context, sandPath, fileName, mimeType)
+            throw Exception("重写保存文件方法")
         }
     }
 
     /**
-     * 保存文件时使用单线程。防止复制的时候，出现文件名重复的问题
+     * 保存文件
      */
     override fun saveMediaToDCIM(
         context: Context,
@@ -221,7 +203,7 @@ class DownloadManager : IDownloadManager,
         mimeType: String
     ) {
         launch(coroutineContext) {
-            SaveFileFromSand.saveMediaToDCIM(context, sandPath, fileName, mimeType)
+            throw Exception("重写保存文件方法")
         }
     }
 
