@@ -1,4 +1,4 @@
-package com.example.foty.somedependentlibraries.download
+package com.example.foty.flower.download
 
 interface IFileDownloadListener {
     fun progress(soFarBytes: Int, totalBytes: Int, speed: Int)

@@ -1,4 +1,4 @@
-package com.example.foty.somedependentlibraries.widget;
+package com.example.foty.flower.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,11 +12,10 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-public class LeftPathView extends View {
+public class RightPathView extends View {
 
     Path path;
     Paint paint;
-
     Path pathTouch;
     Paint paintTouch;
 
@@ -25,19 +24,19 @@ public class LeftPathView extends View {
 
     int visibleHeight = 20;
 
-    public LeftPathView(Context context) {
+    public RightPathView(Context context) {
         this(context, null);
     }
 
-    public LeftPathView(Context context, @Nullable AttributeSet attrs) {
+    public RightPathView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public LeftPathView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RightPathView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         this(context, attrs, defStyleAttr, 0);
     }
 
-    public LeftPathView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public RightPathView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
 
         path = new Path();
@@ -56,11 +55,11 @@ public class LeftPathView extends View {
         super.onDraw(canvas);
         mWidth = getWidth();
         mHeight = getHeight();
-        Log.d("lxx", "LeftPathView: width= " + getWidth() + ", height= " + getHeight());
+        Log.d("lxx", "RightPathView: width= " + getWidth() + ", height= " + getHeight());
 
-        canvas.drawArc(new RectF(-mWidth, 0, mWidth, mWidth * 2), 270, 90, true, paintTouch);
-        canvas.drawArc(new RectF(-mWidth, mHeight - mWidth * 2, mWidth, mHeight), 90, -90, true, paintTouch);
-        pathTouch.addRect(new RectF(0,  mWidth, mWidth, mHeight - mWidth), Path.Direction.CCW);
+        canvas.drawArc(new RectF(0, 0, mWidth *2, mWidth * 2), 270, -90, true, paintTouch);
+        canvas.drawArc(new RectF(0, mHeight - mWidth * 2, mWidth * 2, mHeight), 90, 90, true, paintTouch);
+        pathTouch.addRect(new RectF(0, mWidth, mWidth, mHeight - mWidth), Path.Direction.CCW);
         canvas.drawPath(pathTouch, paintTouch);
 
 

@@ -1,4 +1,4 @@
-package com.example.foty.somedependentlibraries;
+package com.example.foty.flower;
 
 import android.app.Activity;
 import android.content.Context;

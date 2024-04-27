@@ -1,4 +1,4 @@
-package com.example.foty.somedependentlibraries.download
+package com.example.foty.flower.download
 
 /**
  * 封装下载对象

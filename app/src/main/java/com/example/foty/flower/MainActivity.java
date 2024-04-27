@@ -1,7 +1,6 @@
-package com.example.foty.somedependentlibraries;
+package com.example.foty.flower;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Bundle;

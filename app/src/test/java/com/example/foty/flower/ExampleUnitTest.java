@@ -1,4 +1,4 @@
-package com.example.foty.somedependentlibraries;
+package com.example.foty.flower;
 
 import org.junit.Test;
 

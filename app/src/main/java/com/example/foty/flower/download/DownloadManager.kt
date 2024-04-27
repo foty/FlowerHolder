@@ -1,13 +1,12 @@
 import android.content.Context
-import com.example.foty.somedependentlibraries.App
-import com.example.foty.somedependentlibraries.download.DownloadEntity
-import com.example.foty.somedependentlibraries.download.IDownloadManager
-import com.example.foty.somedependentlibraries.download.IFileDownloadListener
+import com.example.foty.flower.App
+import com.example.foty.flower.download.DownloadEntity
+import com.example.foty.flower.download.IDownloadManager
+import com.example.foty.flower.download.IFileDownloadListener
 import com.liulishuo.filedownloader.BaseDownloadTask
 import com.liulishuo.filedownloader.FileDownloadListener
 import com.liulishuo.filedownloader.FileDownloader
 import com.liulishuo.filedownloader.model.FileDownloadStatus
-import com.liulishuo.filedownloader.notification.BaseNotificationItem
 import com.liulishuo.filedownloader.util.FileDownloadUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

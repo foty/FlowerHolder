@@ -1,4 +1,4 @@
-package com.example.foty.somedependentlibraries.widget;
+package com.example.foty.flower.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
