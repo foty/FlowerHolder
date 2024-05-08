@@ -12,7 +12,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.foty.flower.FloatWindowImageView
+import com.example.foty.flower.view.FloatWindowImageView
 import com.example.foty.flower.R
 
 class FloatViewActivity : AppCompatActivity() {
@@ -87,7 +87,12 @@ class FloatViewActivity : AppCompatActivity() {
         layoutParams.gravity = Gravity.START or Gravity.TOP
         layoutParams.width = 400
         layoutParams.height = 50
-        val imageView: ImageView = FloatWindowImageView(windowManager, layoutParams, this)
+        val imageView: ImageView =
+            FloatWindowImageView(
+                windowManager,
+                layoutParams,
+                this
+            )
         imageView.setBackgroundColor(getColor(R.color.colorAccent))
     }
 }

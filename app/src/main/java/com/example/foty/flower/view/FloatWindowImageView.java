@@ -1,4 +1,4 @@
-package com.example.foty.flower;
+package com.example.foty.flower.view;
 
 import android.app.Activity;
 import android.content.Context;

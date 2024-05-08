@@ -30,7 +30,7 @@
         <activity android:name=".ui.FloatViewActivity" />
         <activity android:name=".ui.MusicViewActivity" />
 
-        <service android:name="com.example.foty.flower.MyService" />
+        <service android:name="com.example.foty.flower.service.MyService" />
     </application>
 
 </manifest>

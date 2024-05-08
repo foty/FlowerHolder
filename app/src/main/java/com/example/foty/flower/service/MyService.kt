@@ -1,4 +1,4 @@
-package com.example.foty.flower
+package com.example.foty.flower.service
 
 import android.app.Service
 import android.content.Intent
