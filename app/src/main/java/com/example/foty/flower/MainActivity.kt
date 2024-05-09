@@ -7,6 +7,7 @@ import com.example.foty.flower.databinding.ActivityMainBinding
 import com.example.foty.flower.ui.FloatViewActivity
 import com.example.foty.flower.ui.MusicViewActivity
 import com.example.foty.flower.ui.ServiceActivity
+import com.example.foty.flower.ui.SettingActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -23,6 +24,9 @@ class MainActivity : AppCompatActivity() {
         }
         binding.tvMusic.setOnClickListener {
             startActivity(Intent(this, MusicViewActivity::class.java))
+        }
+        binding.tvSystemSet.setOnClickListener {
+            startActivity(Intent(this, SettingActivity::class.java))
         }
     }
 
