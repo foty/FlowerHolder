@@ -1,5 +1,6 @@
 package com.example.foty.flower.view
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.ComponentName
@@ -7,13 +8,18 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.media.AudioManager
+import android.media.MediaMetadata
 import android.media.session.MediaController
 import android.media.session.MediaSessionManager
 import android.media.session.MediaSessionManager.OnActiveSessionsChangedListener
+import android.media.session.PlaybackState
 import android.os.Build
 import android.os.Handler
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 class MusicViewManager(val context: Context) : MediaController.Callback(),
     OnActiveSessionsChangedListener {
@@ -21,12 +27,12 @@ class MusicViewManager(val context: Context) : MediaController.Callback(),
     private lateinit var mediaSessionManager: MediaSessionManager
     private lateinit var componentName: ComponentName
     private var mediaController: MediaController? = null
-    private var name = ""
 
+    private var musicListener: MusicManager? = null
     private var d = ""
     private var e = ""
-    private var g = ""
-    private var bitmap: Bitmap? = null
+    private var name = ""
+    private var musicBitmap: Bitmap? = null
 
     private val handler by lazy { Handler() }
     private val sessionRunnable: Runnable = Runnable {
@@ -43,8 +49,10 @@ class MusicViewManager(val context: Context) : MediaController.Callback(),
             mediaController?.registerCallback(this)
 
             val state = mediaController?.playbackState
+            notifyState(state)
             val meta = mediaController?.metadata
-
+            Log.d("lxx", "state= $state, meta= ${meta}")
+            meta?.let { parseMetadata(it) }
             seccess = true
         }
         if (seccess) {
@@ -52,28 +60,43 @@ class MusicViewManager(val context: Context) : MediaController.Callback(),
         } else {
             callFailed()
         }
-
     }
 
     init {
         initManager()
     }
 
-    override fun onActiveSessionsChanged(controllers: MutableList<MediaController>?) {
+    override fun onActiveSessionsChanged(list: List<MediaController?>?) {
+        Log.d("lxx", "onActiveSessionsChanged");
+        initManager()
+    }
 
+    override fun onMetadataChanged(mediaMetadata: MediaMetadata?) {
+        super.onMetadataChanged(mediaMetadata)
+        mediaMetadata ?: return
+        parseMetadata(mediaMetadata)
+    }
+
+    override fun onPlaybackStateChanged(playbackState: PlaybackState?) {
+        super.onPlaybackStateChanged(playbackState)
+        notifyState(playbackState)
+    }
+
+    override fun onSessionDestroyed() {
+        super.onSessionDestroyed()
+        callFailed()
     }
 
     private fun initManager() {
         try {
             mediaSessionManager =
-                context.getSystemService("android.content.Context.MEDIA_SESSION_SERVICE") as MediaSessionManager
+                context.getSystemService("media_session") as MediaSessionManager
             componentName = ComponentName(
                 context,
                 (NotificationListener::class.java as Class<*>)
             )
             mediaSessionManager.addOnActiveSessionsChangedListener(this, componentName)
             next()
-
         } catch (e: SecurityException) {
             getPermission(context)
             e.printStackTrace()
@@ -82,27 +105,85 @@ class MusicViewManager(val context: Context) : MediaController.Callback(),
         }
     }
 
+    fun notifyState(playbackState: PlaybackState?) {
+        if (playbackState != null) {
+            if (playbackState.state == 3) {
+                musicListener?.stateChange(3)
+            } else {
+                musicListener?.stateChange(2)
+            }
+        }
+    }
+
+    fun parseMetadata(mediaMetadata: MediaMetadata) {
+        val str: String?
+        val str2: String?
+        val bitmap: Bitmap?
+        if (mediaMetadata != null) {
+            var bitmap2: Bitmap? = null
+            str = try {
+                mediaMetadata.getString("android.media.metadata.ARTIST")
+            } catch (unused: java.lang.Exception) {
+                null
+            }
+            str2 = try {
+                mediaMetadata.getString("android.media.metadata.TITLE")
+            } catch (unused2: java.lang.Exception) {
+                null
+            }
+            if (str != null && !str.isEmpty()) {
+                d = str
+            }
+            if (str2 != null && !str2.isEmpty()) {
+                e = str2
+            }
+            bitmap = try {
+                mediaMetadata.getBitmap("android.media.metadata.ART")
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+                null
+            }
+            if (bitmap != null) {
+                musicBitmap = bitmap
+            } else {
+                try {
+                    bitmap2 = mediaMetadata.getBitmap("android.media.metadata.ALBUM_ART")
+                } catch (e2: java.lang.Exception) {
+                    e2.printStackTrace()
+                }
+                musicBitmap = bitmap2
+            }
+        }
+        // 回调信息出去
+        Log.d("lxx", "ARTIST= $d,TITLE= $e,packname= $name")
+        musicListener?.contentChange(d, e, musicBitmap, name)
+    }
 
     fun callFailed() {
         d = ""
         e = "音乐"
-        bitmap = null
+        musicBitmap = null
         setState()
-        // todo 回调空内容
-//        this.i.contentChange(this.d, this.e, this.f, this.g)
+        musicListener?.contentChange(this.d, this.e, musicBitmap, name)
     }
 
     fun setState() {
-//        if (n5.b(this.h).i() && this.b != null) {
-//            this.i.stateChange(3)
-//        } else {
-//            if (n5.b(this.h).i()) {
-//                return
-//            }
-//            this.i.stateChange(2)
-//        }
+        if (getAudioManager(context) && mediaController != null) {
+            //处于播放状态
+            musicListener?.stateChange(3)
+        } else {
+            if (getAudioManager(context)) {
+                return
+            }
+            // 处于未播放状态
+            musicListener?.stateChange(2)
+        }
     }
 
+    fun getAudioManager(context: Context): Boolean {
+        val audio = context.getSystemService("audio") as AudioManager
+        return audio.isMusicActive
+    }
 
     fun next() {
         if (notification(context).not()) {
@@ -112,6 +193,16 @@ class MusicViewManager(val context: Context) : MediaController.Callback(),
         initMediaController()
         handler.removeCallbacks(sessionRunnable)
         handler.postDelayed(sessionRunnable, 100L)
+    }
+
+
+    interface MusicManager {
+        fun contentChange(title: String?, lyrics: String?, cover: Bitmap?, str3: String?)
+        fun stateChange(i: Int)
+    }
+
+    fun setMusicListener(listener: MusicManager) {
+        musicListener = listener
     }
 
     fun initMediaController() {
@@ -151,6 +242,9 @@ class MusicViewManager(val context: Context) : MediaController.Callback(),
     fun getPermission(context: Context) {
         Toast.makeText(context, "SecurityException", Toast.LENGTH_SHORT)
             .show()
-        // TODO: 申请权限
+        // TODO: 检查是否已经授予了权限
+
+
     }
+
 }

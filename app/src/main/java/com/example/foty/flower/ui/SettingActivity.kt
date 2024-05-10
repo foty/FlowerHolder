@@ -158,4 +158,21 @@ class SettingActivity : AppCompatActivity() {
             e2.printStackTrace()
         }
     }
+
+    /**
+     * 根据包名启动应用
+     */
+    fun launcherApp(context: Context, packageName: String?) {
+        try {
+            val launchIntentForPackage = context.packageManager.getLaunchIntentForPackage(
+                packageName!!
+            )
+            if (launchIntentForPackage != null) {
+                launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(launchIntentForPackage)
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
 }
