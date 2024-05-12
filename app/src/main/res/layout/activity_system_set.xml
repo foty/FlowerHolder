@@ -8,14 +8,14 @@
     tools:context="com.example.foty.flower.MainActivity">
 
     <TextView
-        android:id="@+id/tv_open_night_mode"
+        android:id="@+id/tv_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="66dp"
         android:background="#3F9898"
         android:paddingHorizontal="25dp"
         android:paddingVertical="15dp"
-        android:text="打开护眼模式"
+        android:text="Start"
         android:textColor="#ffffff"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -24,20 +24,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_close_night_mode"
+        android:id="@+id/tv_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
         android:background="#3F9898"
         android:paddingHorizontal="25dp"
         android:paddingVertical="15dp"
-        android:text="关闭护眼模式"
+        android:text="End"
         android:textColor="#ffffff"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_open_night_mode" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_start" />
 
 <!--    <TextView-->
 <!--        android:id="@+id/tv_music"-->

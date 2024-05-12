@@ -8,6 +8,7 @@ import com.example.foty.flower.ui.FloatViewActivity
 import com.example.foty.flower.ui.MusicViewActivity
 import com.example.foty.flower.ui.ServiceActivity
 import com.example.foty.flower.ui.SettingActivity
+import com.example.foty.flower.ui.ShotActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -27,6 +28,10 @@ class MainActivity : AppCompatActivity() {
         }
         binding.tvSystemSet.setOnClickListener {
             startActivity(Intent(this, SettingActivity::class.java))
+        }
+
+        binding.tvScreenshot.setOnClickListener {
+            startActivity(Intent(this, ShotActivity::class.java))
         }
     }
 
