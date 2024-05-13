@@ -35,12 +35,15 @@ class MusicView : ConstraintLayout, MusicViewManager.MusicManager {
     }
 
     override fun contentChange(title: String?, lyrics: String?, cover: Bitmap?, str3: String?) {
-        Log.d("lxx", "contentChange=========================");
         binding?.let {
             it.name.text = "作者：$title"
             it.song.text = "歌詞：$lyrics"
             it.img.setImageBitmap(cover)
         }
+    }
+
+    fun destroy(){
+        musicViewManager.destroy()
     }
 
     override fun stateChange(i: Int) {

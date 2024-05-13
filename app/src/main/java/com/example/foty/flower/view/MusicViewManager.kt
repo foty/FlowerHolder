@@ -1,6 +1,5 @@
 package com.example.foty.flower.view
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.ComponentName
@@ -18,8 +17,6 @@ import android.os.Handler
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 
 class MusicViewManager(val context: Context) : MediaController.Callback(),
     OnActiveSessionsChangedListener {
@@ -29,10 +26,24 @@ class MusicViewManager(val context: Context) : MediaController.Callback(),
     private var mediaController: MediaController? = null
 
     private var musicListener: MusicManager? = null
-    private var d = ""
-    private var e = ""
-    private var name = ""
+    private var artist = ""
+    private var title = ""
+    private var packageName = ""
     private var musicBitmap: Bitmap? = null
+
+    private var time = 0L
+    private var playTime = 0L
+    private val timeHandler = Handler()
+    private val timeRunnable = object : Runnable {
+        override fun run() {
+            time += 1000
+            Log.e("lxx", "-------------自己的倒计时,time= $time")
+            timeHandler.postDelayed(this, 1000)
+        }
+    }
+
+    private var state = -1
+    private var songArtist = ""
 
     private val handler by lazy { Handler() }
     private val sessionRunnable: Runnable = Runnable {
@@ -45,13 +56,13 @@ class MusicViewManager(val context: Context) : MediaController.Callback(),
             )
         ) {
             mediaController = activeSessions[0]
-            name = mediaController?.getPackageName() ?: ""
+            packageName = mediaController?.getPackageName() ?: ""
             mediaController?.registerCallback(this)
 
             val state = mediaController?.playbackState
-            notifyState(state)
             val meta = mediaController?.metadata
-            Log.d("lxx", "state= $state, meta= ${meta}")
+            Log.d("lxx", "已经在播放了----------")
+            notifyState(state)
             meta?.let { parseMetadata(it) }
             seccess = true
         }
@@ -67,8 +78,20 @@ class MusicViewManager(val context: Context) : MediaController.Callback(),
     }
 
     override fun onActiveSessionsChanged(list: List<MediaController?>?) {
-        Log.d("lxx", "onActiveSessionsChanged");
+        Log.d("lxx", "onActiveSessionsChanged ----------------------");
         initManager()
+    }
+
+    override fun onPlaybackStateChanged(playbackState: PlaybackState?) {
+        super.onPlaybackStateChanged(playbackState)
+        playbackState?.let {
+            state = it.state
+            if (state == PlaybackState.STATE_PAUSED){
+                timeHandler.removeCallbacks(timeRunnable)
+                time = playTime
+            }
+            notifyState(it)
+        }
     }
 
     override fun onMetadataChanged(mediaMetadata: MediaMetadata?) {
@@ -77,10 +100,6 @@ class MusicViewManager(val context: Context) : MediaController.Callback(),
         parseMetadata(mediaMetadata)
     }
 
-    override fun onPlaybackStateChanged(playbackState: PlaybackState?) {
-        super.onPlaybackStateChanged(playbackState)
-        notifyState(playbackState)
-    }
 
     override fun onSessionDestroyed() {
         super.onSessionDestroyed()
@@ -103,6 +122,11 @@ class MusicViewManager(val context: Context) : MediaController.Callback(),
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun destroy(){
+        mediaController?.unregisterCallback(this)
+        timeHandler.removeCallbacks(timeRunnable)
     }
 
     fun notifyState(playbackState: PlaybackState?) {
@@ -132,10 +156,10 @@ class MusicViewManager(val context: Context) : MediaController.Callback(),
                 null
             }
             if (str != null && !str.isEmpty()) {
-                d = str
+                artist = str
             }
             if (str2 != null && !str2.isEmpty()) {
-                e = str2
+                title = str2
             }
             bitmap = try {
                 mediaMetadata.getBitmap("android.media.metadata.ART")
@@ -153,18 +177,45 @@ class MusicViewManager(val context: Context) : MediaController.Callback(),
                 }
                 musicBitmap = bitmap2
             }
+
+            // 移动进度
+//            mediaController?.transportControls?.seekTo(2000L)
+
+            val currentPosition = mediaController?.playbackState?.position ?: -0L
+            playTime = currentPosition
+            val allTime = mediaMetadata?.getLong("android.media.metadata.DURATION")
+            Log.d("lxx", "进度进度进度-------- currentPosition= $currentPosition, time= $allTime")
+
+
+            if (songArtist != artist) {
+                Log.d("lxx", "播放新歌曲啦。。。。。。启动自己倒计时去")
+                time = if (playTime != 0L) playTime else 0L
+                timeHandler.removeCallbacks(timeRunnable)
+                timeHandler.post(timeRunnable)
+            }
+
+
+            val author = mediaMetadata?.getString("android.media.metadata.AUTHOR")
+            val author2 = mediaMetadata?.getString("android.media.metadata.ALBUM_ARTIST")
+            val writer = mediaMetadata?.getString("android.media.metadata.WRITER")
+
+            songArtist = artist
+            // 回调信息出去
+            Log.i(
+                "lxx",
+                "content: artist= $artist, title= $title, packageName= $packageName"
+            )
         }
-        // 回调信息出去
-        Log.d("lxx", "ARTIST= $d,TITLE= $e,packname= $name")
-        musicListener?.contentChange(d, e, musicBitmap, name)
+        musicListener?.contentChange(artist, title, musicBitmap, packageName)
     }
 
     fun callFailed() {
-        d = ""
-        e = "音乐"
+        artist = ""
+        title = "音乐"
         musicBitmap = null
+        Log.d("lxx", "callFailed  *********** ")
         setState()
-        musicListener?.contentChange(this.d, this.e, musicBitmap, name)
+        musicListener?.contentChange(this.artist, this.title, musicBitmap, packageName)
     }
 
     fun setState() {

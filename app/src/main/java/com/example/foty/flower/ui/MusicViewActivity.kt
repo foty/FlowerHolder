@@ -10,7 +10,6 @@ import android.provider.Settings
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import com.example.foty.flower.databinding.ActivityMusicViewBinding
 import com.example.foty.flower.view.NotificationListener
 
@@ -31,6 +30,11 @@ class MusicViewActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.musicView.destroy()
     }
 
     @RequiresApi(Build.VERSION_CODES.O_MR1)
